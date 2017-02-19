@@ -1,0 +1,12 @@
+@import "consts";
+#ship {
+    // background-color: $shipColor;
+    width: #{$shipWidth}px;
+    height: #{$shipHeight}px;
+    position: absolute;
+    bottom: 0;
+    background-image: url('assets/ship.png');
+    &.destroyed {
+        // background-image: url('assets/small-explosion-loop-once.gif');
+    }
+}

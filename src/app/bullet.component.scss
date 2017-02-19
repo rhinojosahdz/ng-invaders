@@ -1,0 +1,18 @@
+@import "consts";
+.bullet {
+    background-color: $bulletColor;
+    width: #{$bulletWidth}px;
+    height: #{$bulletHeight}px;
+    position: absolute;
+    -webkit-filter: blur(.3px);
+}
+
+.bullet.fromEnemy1{
+    background-color: green;
+}
+.bullet.fromEnemy2{
+    background-color: red;
+}
+.bullet.fromEnemy3{
+    background-color: yellow;
+}

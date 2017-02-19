@@ -1,0 +1,16 @@
+<div id="board">
+    <ship></ship>
+    <bullet 
+        *ngFor="let bullet of modelService.bullets" 
+        [model]="bullet"
+    ></bullet>
+    <enemy 
+        *ngFor="let enemy of modelService.enemies" 
+        [model]="enemy"
+    ></enemy>
+    <shield 
+        *ngFor="let shield of modelService.shields" 
+        [model]="shield"
+    ></shield>
+    <div id="center-label" [hidden]="!modelService.showCenterLabel" [innerHTML]="modelService.centerLabelText"></div>
+</div>

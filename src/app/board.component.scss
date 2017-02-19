@@ -1,0 +1,25 @@
+@import "consts";
+#board {
+    background-color: $boardBackgroundColor;
+    width: #{$boardWidth}px;
+    height: #{$boardHeight}px;
+    position: relative;
+    // border: 1px solid $boardBorderColor;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#center-label {
+    z-index: 2;
+    background-color: transparent;
+    color: white;
+    font-size: 4px;
+    -webkit-filter: blur(0.2px);
+    text-align: center;
+    // trying to make font look like captions (with an outline, like in movie theaters) so that it looks clearly over the enemies
+    // text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    // -webkit-text-stroke-width: 1px;
+    // -webkit-text-stroke-color: white;
+}

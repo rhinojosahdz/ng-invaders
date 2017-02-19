@@ -1,0 +1,40 @@
+$m: 1;
+$bodyBackgroundColor: black; //$replace_bodyBackgroundColor;
+//
+$boardBorderColor: white;
+//
+$boardBackgroundColor: black;
+$boardWidth: 60; //320;
+$boardHeight: 80; //400;
+// width has to be odd so it looks good
+$shipColor: green;
+$shipWidth: 11 * $m;
+$shipHeight: 5 * $m;
+//
+$enemyColor: yellow;
+$enemyWidth: 10 * $m;
+$enemyHeight: 6 * $m;
+//
+$bulletColor: red;
+$bulletWidth: 1 * $m;
+$bulletHeight: 5 * $m;
+// has to be odd so we can calculate the center gap easily... and larger or equal to ship's width so it covers it
+$shieldColor: pink;
+$shieldWidth: 7 * $m;
+$shieldHeight: 5 * $m;
+//
+$gray: #F5F5F5;
+$allGray: false;
+@if $allGray {
+    $bodyBackgroundColor: white;
+    $boardBackgroundColor: white;
+    $boardBorderColor: white;
+    //
+    $shipColor: $gray;
+    $enemyColor: $gray;
+    $bulletColor: $gray;
+    $shieldColor: $gray;
+    //
+    $boardWidth: 60;
+    $boardHeight: 80;
+}

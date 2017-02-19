@@ -1,0 +1,42 @@
+@import "consts";
+.enemy {
+    // background-color: $enemyColor;
+    position: absolute;
+    width: #{$enemyWidth}px;
+    height: #{$enemyHeight}px;
+    // TODO use @for
+    &.enemy1 {
+        background-image: url('assets/enemy1.gif');
+    }
+    &.enemy2 {
+        background-image: url('assets/enemy2.gif');
+    }
+    &.enemy3 {
+        background-image: url('assets/enemy3.gif');
+    }
+}
+
+.img {
+    // width: 3px;
+    // height: 3px;
+    position: absolute;
+}
+
+.img:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    top: -1px;
+    left: -1px;
+}
+
+.img.img1:after {
+    box-shadow: 1px 2px gray, 2px 1px gray, 2px 3px gray, 3px 2px gray;
+}
+
+.img.img2:after {
+    box-shadow: 1px 1px gray, 3px 1px gray, 2px 2px gray, 1px 3px gray, 3px 3px gray;
+}

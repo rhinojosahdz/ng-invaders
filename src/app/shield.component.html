@@ -1,0 +1,5 @@
+<div [ngStyle]="{'bottom': y + 'px', 'left': x + 'px'}" class="shield">
+    <div *ngFor="let row of rows" class="row">
+        <div *ngFor="let col of row.cols" class="col" [ngClass]="{'destroyed': col.destroyed}"></div>
+    </div>
+</div>
