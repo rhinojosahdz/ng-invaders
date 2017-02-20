@@ -24,7 +24,7 @@ let obj = {
         maxNumOfBullets: 1,
         bulletSpeed: 25,
         minBulletSpeed: 10,
-        timeItTakesToShootSuperBullet: 1000,
+        timeItTakesToShootSuperBullet: 700,
     },
     enemy: {
         width: 10 * m,
