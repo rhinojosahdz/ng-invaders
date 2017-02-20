@@ -116,9 +116,45 @@ export class BoardComponent {
         left: { running: false, interval: <any>undefined },
         right: { running: false, interval: <any>undefined },
     }
+
+    @HostListener('document:touchstart', ['$event'])
+    touchstart(event: TouchEvent) {
+        let x = event.touches[0].clientX; // / (<any>document).body.style.zoom;
+        let section = screen.width / 3; //this.modelService.CONSTS.board.width / 3;
+        if (x < section) {
+            this.onKeyDown('ArrowLeft');
+        }
+        if (x > section * 2) {
+            this.onKeyDown('ArrowRight');
+        }
+        if (x > section && x < (section * 2)) {
+            this.onKeyDown('Space');
+        }
+    }
+
+    @HostListener('document:touchend', ['$event'])
+    touchend(event: TouchEvent) {        
+        let x = event.changedTouches[0].clientX; // / (<any>document).body.style.zoom;
+        let section = screen.width / 3; //this.modelService.CONSTS.board.width / 3;
+        if (x < section) {
+            this.onKeyUp('ArrowLeft');
+        }
+        if (x > section * 2) {
+            this.onKeyUp('ArrowRight');
+        }
+        if (x > section && x < (section * 2)) {
+            this.onKeyUp(' ');
+        }
+    }
+
+
     @HostListener('document:keyup', ['$event'])
     keyup(event: KeyboardEvent) {
         let key = event.key;
+        this.onKeyUp(key);
+    }
+
+    public onKeyUp(key: string) {
         switch (key) {
             case 'ArrowLeft':
                 clearInterval(this.pressingDownInterval.left.interval);
@@ -159,6 +195,10 @@ export class BoardComponent {
     @HostListener('document:keydown', ['$event'])
     keydown(event: KeyboardEvent) {
         let key = event.code;
+        this.onKeyDown(key);
+    }
+
+    public onKeyDown(key: string) {
         if (this.modelService.gameover) {
             return;
         }
