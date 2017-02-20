@@ -23,6 +23,7 @@ export class ModelService {
 
     constructor() {
         this.CONSTS = process.env.CONSTS;
+        // alert(`Version ${this.CONSTS.game.version}`);
         (<any>window).t = this;
         let level = this.CONSTS.game.level = +localStorage.getItem('level') || 1;
         let maxLevel = +localStorage.getItem('maxLevel') || 1;

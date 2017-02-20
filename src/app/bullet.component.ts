@@ -30,7 +30,7 @@ export class BulletComponent {
         this.id = this.model.id;
         this.enemyThatShoot = this.model.enemyThatShoot;
         this.fromShip = this.model.fromShip;
-        this.y = this.model.fromShip ? (0 + this.modelService.CONSTS.ship.height) : (this.model.y - this.modelService.CONSTS.ship.height);
+        this.y = this.model.fromShip ? 0 : (this.model.y - this.modelService.CONSTS.ship.height);
         this.x = Math.floor(this.model.fromShip ? (this.model.x + (this.modelService.CONSTS.ship.width / 2)) : (this.model.x + (this.modelService.CONSTS.enemy.width / 2)));
         this.shootInterval = setInterval(() => {
             this.move();
@@ -64,40 +64,70 @@ export class BulletComponent {
         this.y--;
     }
 
+    public c = this.modelService.CONSTS;
+    public shieldsStartY = this.modelService.shields[0].component.y + this.c.shield.height - 1; // -1 to avoid using <=
+    public shieldsEndY = this.modelService.shields[0].component.y - 2; // -2 to avoid using >=
     public checkForCollision() {
         let ship = this.modelService.ship;
         let b = this;
-        let shieldGotHit = false;
-        if (b.y < this.modelService.CONSTS.shield.startingY + this.modelService.CONSTS.bullet.height) { // FOR PERFORMANCE: only run the loop if bullet.y is inside shield.y area
-            // console.log('running each');
-            _.each(this.modelService.shields, s => {
-                // we check if shield area got hit (x,y point may be destroyed tho)
-                if (Math.abs(b.x - (s.component.x + (this.modelService.CONSTS.shield.width / 2))) <= this.modelService.CONSTS.shield.width / 2 && Math.abs(s.component.y - b.y) < this.modelService.CONSTS.bullet.height) {
-                    let col = Math.abs(b.x - s.component.x);
-                    shieldGotHit = s.component.removePixel(col, b.fromShip);
-                    return !shieldGotHit;
+        const y = b.y + this.c.bullet.height - 1; // -1 to avoid using >=
+        if (this.fromShip) {
+            if (!this.checkIfShieldGotHit(b, b.y + this.c.bullet.height)) {
+                const fe = this.modelService.enemies[0]; // first enemy, it will always be the/or-one of the closest to the ship
+                if (fe) { // if there's at least an enemy
+                    const enemiesStartY = fe.component.y; // - this.c.enemy.height;
+                    if (y > enemiesStartY) {
+                        const le = _.last(this.modelService.enemies); // last enemy
+                        const enemiesEndY = le.component.y + this.c.enemy.height;
+                        if (y < enemiesEndY) {
+                            _.each(this.modelService.enemies, e => {
+                                const enemyStartsX = e.component.x;
+                                const enemyEndsX = enemyStartsX + this.c.enemy.width;
+                                const enemyStartsY = e.component.y;
+                                const enemyEndsY = enemyStartsY + this.c.enemy.height;
+                                if (_.inRange(b.x, enemyStartsX, enemyEndsX) && _.inRange(y, enemyStartsY, enemyEndsY)) {
+                                    b.destroy();
+                                    e.component.destroy();
+                                }
+                            });
+                        }
+                    }
                 }
-            });
-            if (shieldGotHit) {
-                b.destroy();
-                return false;
             }
-        }
-        // TODO improve y axis collision detection (just like with did with axis x)
-        if (b.fromShip) {
-            _.each(this.modelService.enemies, e => {
-                if (Math.abs(b.x - (e.component.x + (this.modelService.CONSTS.enemy.width / 2))) <= this.modelService.CONSTS.enemy.width / 2 && Math.abs(e.component.y - b.y) < this.modelService.CONSTS.bullet.height) {
-                    b.destroy();
-                    e.component.destroy();
-                }
-            });
         } else {
-            if (Math.abs(b.x - (ship.x + (this.modelService.CONSTS.ship.width / 2))) <= this.modelService.CONSTS.ship.width / 2 && Math.abs(b.y - ship.y) < this.modelService.CONSTS.bullet.height) {
-                this.modelService.ship.gotHit();
-                b.destroy();
-                return false;
+            if (!this.checkIfShieldGotHit(b, b.y)) {
+                if (y < this.shieldsStartY) {
+                    const shipStartsX = this.modelService.ship.x;
+                    const shipEndsX = shipStartsX + this.c.ship.width;
+                    if (_.inRange(b.x, shipStartsX, shipEndsX)) {
+                        this.modelService.ship.gotHit();
+                        b.destroy();
+                        return true;
+                    }
+                }
             }
         }
+    }
+
+    public checkIfShieldGotHit(b: BulletComponent, y: number): boolean {
+        let shieldGotHit = false;
+        if (y < this.shieldsStartY) { // _.inRange(y, shieldStarts, shipEnds) no need to use this because after `shipEnds` the board ends
+            if (y > this.shieldsEndY) { // _.inRange(y, shieldStarts, shieldEnds)
+                _.each(this.modelService.shields, s => {
+                    const shieldStartsX = s.x;
+                    const shieldEndsX = s.x + this.c.shield.width;
+                    if (_.inRange(b.x, shieldStartsX, shieldEndsX)) {
+                        shieldGotHit = s.component.removePixel(Math.abs(b.x - s.component.x), b.fromShip);
+                        return !shieldGotHit;
+                    }
+                });
+                if (shieldGotHit) {
+                    b.destroy();
+                    return true;
+                }
+            }
+        }
+        return shieldGotHit;
     }
 
     public destroy() {

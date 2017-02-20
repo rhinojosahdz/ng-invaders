@@ -38,6 +38,9 @@ export class BoardComponent {
                 if (this.modelService.gameover) {
                     return;
                 }
+                if (this.modelService.CONSTS.board.maxNumberOfEnemies !== -1 && this.modelService.CONSTS.board.maxNumberOfEnemies <= this.modelService.enemies.length) {
+                    return;
+                }
                 this.modelService.enemies.push(<any>{ id: this.modelService.getNextAppId() });
                 this.modelService.enemiesAdded++;
                 if (this.modelService.enemiesAdded >= this.modelService.CONSTS.game.enemiesInLevel) {
@@ -81,6 +84,9 @@ export class BoardComponent {
 
     private enemiesStartShooting() {
         this.modelService.allIntervals.push(setInterval(() => {
+            if (this.modelService.CONSTS.bullet.maxNumOfEnemyBulletsInBoard != -1 && this.modelService.CONSTS.bullet.maxNumOfEnemyBulletsInBoard <= this.modelService.bullets.length) {
+                return;
+            }
             let numberOfEnemiesThatWillShoot = this.modelService.CONSTS.enemy.enemiesThatShootEachInterval;
             if (this.modelService.enemies.length <= this.modelService.CONSTS.enemy.enemiesThatShootEachInterval) {
                 numberOfEnemiesThatWillShoot = this.modelService.enemies.length;
@@ -133,7 +139,7 @@ export class BoardComponent {
     }
 
     @HostListener('document:touchend', ['$event'])
-    touchend(event: TouchEvent) {        
+    touchend(event: TouchEvent) {
         let x = event.changedTouches[0].clientX; // / (<any>document).body.style.zoom;
         let section = screen.width / 3; //this.modelService.CONSTS.board.width / 3;
         if (x < section) {

@@ -10,11 +10,13 @@ let obj = {
         extraLevelEnemies: undefined, // int
         level1Enemies: 2,
         timeoutAfterGameover: 2000,
+        version: '1.2',
     },
     board: {
         width: 60, // 320,
         height: 80, // 400,
         backgroundColor: 'black',
+        maxNumberOfEnemies: -1,
     },
     ship: {
         width: 11 * m,
@@ -37,6 +39,7 @@ let obj = {
     bullet: {
         width: 1 * m,
         height: 5 * m,
+        maxNumOfEnemyBulletsInBoard: -1,
     },
     shield: {
         width: 7 * m,
@@ -48,7 +51,7 @@ let obj = {
 };
 
 // calculated values
-obj.shield.startingY = Math.floor(obj.ship.height * 1.5);
+obj.shield.startingY = Math.floor(obj.ship.height);
 
 let allGray = false;
 if (allGray) {
