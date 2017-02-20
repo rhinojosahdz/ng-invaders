@@ -21,21 +21,6 @@ module.exports = {
 
   module: {
     loaders: [
-      // {
-      //   test: /_consts\.scss$/,
-      //   loader: StringReplacePlugin.replace({
-      //     replacements: [
-      //       {
-      //         pattern: /\$replace_([^;]+);/ig,
-      //         replacement: function (match, p1, offset, string) {
-      //           console.log('MATCHHHH!****');
-      //           console.log(match, p1, offset, string);
-      //           return consts[p1];
-      //         }
-      //       }
-      //     ]
-      //   })
-      // },
       {
         test: /\.ts$/,
         loaders: ['awesome-typescript-loader', 'angular2-template-loader']
@@ -53,8 +38,6 @@ module.exports = {
   },
 
   plugins: [
-    // new StringReplacePlugin(['']),
-    
     new webpack.optimize.CommonsChunkPlugin({
       name: ['app', 'vendor', 'polyfills']
     }),
@@ -73,10 +56,5 @@ module.exports = {
         'CONSTS': JSON.stringify(_.extend(consts, require('./consts/' + ENV)))
       }
     }),
-
-
-    // new HtmlWebpackPlugin({
-    //   template: 'config/test.scss' // Where your index.html template exists
-    // })
   ]
 };

@@ -214,9 +214,7 @@ export class BoardComponent {
                     this.modelService.centerLabelText += `<b>
                     Right: next level<br></b>`;
                 }
-                // setTimeout(() => {
-                    this.canInteractAfterGameover = true;
-                // }, 500); // we wait an additional sec just in case (good UX)
+                this.canInteractAfterGameover = true;
             }, this.modelService.CONSTS.game.timeoutAfterGameover)
         }, this.modelService.CONSTS.game.timeoutAfterGameover);
     }

@@ -26,7 +26,6 @@ export class EnemyComponent implements OnInit {
     constructor(
         public modelService: ModelService
     ) {
-        // this.x = this.modelService.CONSTS.board.width / 2
     }
 
     public ngOnInit() {
