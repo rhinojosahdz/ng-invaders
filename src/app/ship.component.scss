@@ -8,7 +8,7 @@
     background-image: url('assets/ship.png');
     &.destroyed {
         // this doesn't work because the browser cache the image and it doesn't loop anymore after refreshing the page
-        // background-image: url('assets/small-explosion-loop-once.gif');
+        // background-image: url('assets/small-explosion-loop-once-r.gif');
     }
     &.blink {
         animation: blink-animation .2s steps(5, start) infinite;

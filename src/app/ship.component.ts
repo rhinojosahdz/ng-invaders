@@ -49,7 +49,7 @@ export class ShipComponent {
          * play again which is why using binding doesn't work,
          * this may be bad for a webpage
          */
-        document.getElementById("ship").style.backgroundImage = `url('assets/small-explosion-loop-once.gif?${Math.random()}')`;
+        document.getElementById("ship").style.backgroundImage = `url('assets/small-explosion-loop-once-r.gif?${Math.random()}')`;
         this.modelService.board.gameover();
     }
 }

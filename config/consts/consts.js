@@ -36,6 +36,7 @@ let obj = {
         minimumShootInteval: 400, // gets modifies by level
         enemiesThatShootEachInterval: 0, // gets modified by level
         maxNumOfEnemiesThatShootEachInterval: 7, // if level gets too high
+        bulletSpeedMultiplier: 1, // whatever speed the enemies shoot at we divide by this to make the bullet faster
     },
     bullet: {
         width: 1 * m,
@@ -44,7 +45,7 @@ let obj = {
     },
     shield: {
         width: 7 * m,
-        height: 8 * m,
+        height: 5 * m,
         color: 'red',
         startingY: undefined, // int
     },

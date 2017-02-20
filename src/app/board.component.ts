@@ -190,7 +190,7 @@ export class BoardComponent {
                     this.retry();
                 } else {
                     let timeChargingSuperBullet = new Date().getTime() - this.modelService.shipStartedChargingSuperBullet.getTime();
-                    console.log(timeChargingSuperBullet);
+                    // console.log(timeChargingSuperBullet);
                     const superBullet = timeChargingSuperBullet > this.modelService.CONSTS.ship.timeItTakesToShootSuperBullet;
                     this.modelService.shipChargingSuperBullet = false;
                     this.modelService.ship.shoot(superBullet);

@@ -42,7 +42,7 @@ export class BulletComponent {
         this.shootInterval = setInterval(() => {
             this.move();
             this.checkForCollision();
-        }, this.fromShip ? this.modelService.CONSTS.ship.bulletSpeed : (this.modelService.CONSTS.enemy.bulletSpeed * this.enemyThatShoot.type))
+        }, this.fromShip ? this.modelService.CONSTS.ship.bulletSpeed : (this.modelService.CONSTS.enemy.bulletSpeed * this.enemyThatShoot.type / this.modelService.CONSTS.enemy.bulletSpeedMultiplier))
         this.modelService.allIntervals.push(this.shootInterval);
         // console.log('shoot:', this.enemyThatShoot && this.enemyThatShoot.type);
     }
