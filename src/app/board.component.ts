@@ -74,7 +74,9 @@ export class BoardComponent {
     }
 
     public restart() {
-        this.clearAllIntervals();
+        if (!this.modelService.gameover) { // if it's gameover I already cleared the intervals
+            this.clearAllIntervals();
+        }
         this.modelService.startGame();
     }
 
@@ -187,6 +189,9 @@ export class BoardComponent {
                 if (this.modelService.gameover && this.modelService.canInteractAfterGameover) {
                     this.restart();
                 } else {
+                    if (this.modelService.gameover || !this.modelService.shipStartedChargingSuperBullet) { // this.modelService.shipStartedChargingSuperBullet could be null/undefined if it's a retry
+                        return;
+                    }
                     let timeChargingSuperBullet = new Date().getTime() - this.modelService.shipStartedChargingSuperBullet.getTime();
                     // console.log(timeChargingSuperBullet);
                     const superBullet = timeChargingSuperBullet > this.modelService.CONSTS.ship.timeItTakesToShootSuperBullet;
@@ -243,6 +248,9 @@ export class BoardComponent {
                 }
                 break;
             case 'Space':
+                if (this.modelService.gameover) {
+                    return;
+                }
                 if (this.modelService.shipChargingSuperBullet) {
                     return;
                 }
@@ -253,9 +261,8 @@ export class BoardComponent {
     }
 
     public gameover() {
-        // for some reason I get an exception when tring to clear some intervals
-        this.clearAllIntervals();
         this.modelService.gameover = true;
+        this.clearAllIntervals();
         this.modelService.showCenterLabel = true;
         this.modelService.centerLabelText = '<b>GAMEOVER</b><br>';
         setTimeout(() => {
@@ -277,7 +284,16 @@ export class BoardComponent {
     }
 
     public clearAllIntervals() {
-        _.each(this.modelService.allIntervals, i => { try { clearInterval(i); } catch (e) { } });
+        _.each(this.modelService.allIntervals, i => {
+            try {
+                // if (i._state !== 'scheduled' && i.runCount !== 0) { // if the interval has this values then I get an exception (length of undefined)
+                // for some reason I get an exception when tring to clear some intervals                    
+                clearInterval(i);
+                // }
+            } catch (e) {
+                // debugger;
+            }
+        });
     }
 
 }

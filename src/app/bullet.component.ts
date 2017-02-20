@@ -96,6 +96,7 @@ export class BulletComponent {
                                 if (_.inRange(this.x, enemyStartsX, enemyEndsX) && _.inRange(y, enemyStartsY, enemyEndsY)) {
                                     e.component.destroy();
                                     !this.super && this.destroy();
+                                    return false;
                                 }
                             });
                         }

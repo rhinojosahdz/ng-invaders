@@ -1,4 +1,4 @@
-node_modules
-ng-invaders
+node_modules/
+ng-invaders/
 yarn.lock
 npm-debug.log

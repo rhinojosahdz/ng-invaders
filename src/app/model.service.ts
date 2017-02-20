@@ -4,13 +4,14 @@ import { BoardComponent } from './board.component';
 import { BulletComponent } from './bullet.component';
 import { EnemyComponent } from './enemy.component';
 import { ShieldComponent } from './shield.component';
-
+import * as _ from 'lodash';
 
 @Injectable()
 export class ModelService {
     public ship: ShipComponent;
     public board: BoardComponent;
     public CONSTS: any;
+    public UNMODIFIED_CONSTS: any;
     public NODE_ENV: string;
     public centerLabelText: string;
     public shipStartedChargingSuperBullet: Date;
@@ -44,6 +45,8 @@ export class ModelService {
         this.shipChargingSuperBullet = false;
         this.nextLevelAlreadyCleared = false;
         this.canInteractAfterGameover = false;
+        this.shipStartedChargingSuperBullet = undefined;
+        this.centerLabelText = '';
         this.pressingDownInterval = {
             left: { running: false, interval: <any>undefined },
             right: { running: false, interval: <any>undefined },
@@ -51,6 +54,7 @@ export class ModelService {
     }
 
     public startGame() {
+        this.CONSTS = _.cloneDeep(this.UNMODIFIED_CONSTS);
         this.startValues();
         let level = this.CONSTS.game.level = +localStorage.getItem('level') || 1;
         let maxLevel = +localStorage.getItem('maxLevel') || 1;
@@ -91,7 +95,7 @@ export class ModelService {
     }
 
     constructor() {
-        this.CONSTS = process.env.CONSTS;
+        this.UNMODIFIED_CONSTS = process.env.CONSTS;
         this.NODE_ENV = process.env.NODE_ENV;
         switch (this.NODE_ENV) {
             case 'production':
