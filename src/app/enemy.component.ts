@@ -33,9 +33,10 @@ export class EnemyComponent implements OnInit {
         this.id = this.model.id;
         this.y = this.modelService.CONSTS.board.height - this.modelService.CONSTS.enemy.height;
         this.x = this.modelService.CONSTS.board.width - this.modelService.CONSTS.enemy.width;
-        this.modelService.allIntervals.push(this.moveInterval = setInterval(() => {
+        this.moveInterval = setInterval(() => {
             this.move();
-        }, this.modelService.CONSTS.enemy.moveInterval));
+        }, this.modelService.CONSTS.enemy.moveInterval);
+        this.modelService.allIntervals.push(this.moveInterval);
     }
 
     public move() {
@@ -96,7 +97,7 @@ export class EnemyComponent implements OnInit {
         // console.log('enemy gone');
         if (this.modelService.enemies.length === 0 && this.modelService.CONSTS.game.enemiesInLevel <= this.modelService.enemiesAdded) {
             localStorage.setItem('level', ++this.modelService.CONSTS.game.level + '');
-            location.reload();
+            this.modelService.board.restart();
         }
     }
 }

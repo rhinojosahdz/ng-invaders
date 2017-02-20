@@ -10,14 +10,16 @@ import * as _ from 'lodash';
 })
 export class BoardComponent {
     public CONSTS: any;
-    private nextLevelAlreadyCleared: boolean = false;
-    private canInteractAfterGameover: boolean = false;
 
     constructor(
         public modelService: ModelService,
     ) {
         this.modelService.board = this;
+    }
 
+    public startGame() {
+        // in case it's a retry we need to set the image of the ship again (it may be a explosion)
+        document.getElementById("ship").style.backgroundImage = `url('assets/ship.png')`;
         this.enemiesStartShooting();
 
         this.addShields();
@@ -59,7 +61,7 @@ export class BoardComponent {
         // numOfTimesThisShipWillMove needs adjustments
         setTimeout(() => {
             _.each(this.modelService.enemies, (e, idx) => {
-                let numOfTimesThisShipWillMove = (idx * this.modelService.CONSTS.enemy.width);
+                let numOfTimesThisShipWillMove: number = idx * this.modelService.CONSTS.enemy.width;
                 for (let i = 0; i < numOfTimesThisShipWillMove; i++) {
                     e.component.move();
                     // console.log('MOVED');
@@ -71,8 +73,9 @@ export class BoardComponent {
         }, 100); // we wait a little for the enemy ngOnInit to run
     }
 
-    public retry() {
-        location.reload();
+    public restart() {
+        this.clearAllIntervals();
+        this.modelService.startGame();
     }
 
     private addEnemies() {
@@ -118,11 +121,6 @@ export class BoardComponent {
         this.modelService.shields = [];
     }
 
-    private pressingDownInterval = {
-        left: { running: false, interval: <any>undefined },
-        right: { running: false, interval: <any>undefined },
-    }
-
     @HostListener('document:touchstart', ['$event'])
     touchstart(event: TouchEvent) {
         let x = event.touches[0].clientX; // / (<any>document).body.style.zoom;
@@ -163,31 +161,31 @@ export class BoardComponent {
     public onKeyUp(key: string) {
         switch (key) {
             case 'ArrowLeft':
-                clearInterval(this.pressingDownInterval.left.interval);
-                if (this.pressingDownInterval.left.running) {
-                    this.pressingDownInterval.left.running = false;
+                clearInterval(this.modelService.pressingDownInterval.left.interval);
+                if (this.modelService.pressingDownInterval.left.running) {
+                    this.modelService.pressingDownInterval.left.running = false;
                     return;
                 }
-                if (this.modelService.gameover && this.canInteractAfterGameover && this.modelService.CONSTS.game.level > 1) {
+                if (this.modelService.gameover && this.modelService.canInteractAfterGameover && this.modelService.CONSTS.game.level > 1) {
                     let nextLevel = --this.modelService.CONSTS.game.level;
                     localStorage.setItem('level', nextLevel + '');
-                    this.retry();
+                    this.restart();
                 }
                 break;
             case 'ArrowRight':
-                clearInterval(this.pressingDownInterval.right.interval);
-                if (this.pressingDownInterval.right.running) {
-                    this.pressingDownInterval.right.running = false;
+                clearInterval(this.modelService.pressingDownInterval.right.interval);
+                if (this.modelService.pressingDownInterval.right.running) {
+                    this.modelService.pressingDownInterval.right.running = false;
                     return;
                 }
-                if (this.modelService.gameover && this.canInteractAfterGameover && this.nextLevelAlreadyCleared) {
+                if (this.modelService.gameover && this.modelService.canInteractAfterGameover && this.modelService.nextLevelAlreadyCleared) {
                     localStorage.setItem('level', ++this.modelService.CONSTS.game.level + '');
-                    this.retry();
+                    this.restart();
                 }
                 break;
             case ' ':
-                if (this.modelService.gameover && this.canInteractAfterGameover) {
-                    this.retry();
+                if (this.modelService.gameover && this.modelService.canInteractAfterGameover) {
+                    this.restart();
                 } else {
                     let timeChargingSuperBullet = new Date().getTime() - this.modelService.shipStartedChargingSuperBullet.getTime();
                     // console.log(timeChargingSuperBullet);
@@ -217,30 +215,30 @@ export class BoardComponent {
         let ship = this.modelService.ship;
         switch (key) {
             case 'ArrowLeft':
-                if (this.pressingDownInterval.left.running) {
+                if (this.modelService.pressingDownInterval.left.running) {
                     return;
                 } else {
-                    this.pressingDownInterval.left.running = true;
+                    this.modelService.pressingDownInterval.left.running = true;
                     let interval = setInterval(() => {
                         if (ship.x > 0) {
                             this.modelService.ship.moveLeft();
                         }
                     }, 30);
-                    this.pressingDownInterval.left.interval = interval;
+                    this.modelService.pressingDownInterval.left.interval = interval;
                     this.modelService.allIntervals.push(interval);
                 }
                 break;
             case 'ArrowRight':
-                if (this.pressingDownInterval.right.running) {
+                if (this.modelService.pressingDownInterval.right.running) {
                     return;
                 } else {
-                    this.pressingDownInterval.right.running = true;
+                    this.modelService.pressingDownInterval.right.running = true;
                     let interval = setInterval(() => {
                         if ((ship.x + this.modelService.CONSTS.ship.width) < this.modelService.CONSTS.board.width) {
                             this.modelService.ship.moveRight();
                         }
                     }, 30);
-                    this.pressingDownInterval.right.interval = interval;
+                    this.modelService.pressingDownInterval.right.interval = interval;
                     this.modelService.allIntervals.push(interval);
                 }
                 break;
@@ -256,26 +254,30 @@ export class BoardComponent {
 
     public gameover() {
         // for some reason I get an exception when tring to clear some intervals
-        _.each(this.modelService.allIntervals, i => { try { clearInterval(i); } catch (e) { } });
+        this.clearAllIntervals();
         this.modelService.gameover = true;
         this.modelService.showCenterLabel = true;
         this.modelService.centerLabelText = '<b>GAMEOVER</b><br>';
         setTimeout(() => {
             let maxLevel = +localStorage.getItem('maxLevel') || 1;
-            this.nextLevelAlreadyCleared = maxLevel > this.modelService.CONSTS.game.level;
+            this.modelService.nextLevelAlreadyCleared = maxLevel > this.modelService.CONSTS.game.level;
             setTimeout(() => {
                 this.modelService.centerLabelText += `<b>
                  Shoot: retry<br><b/>`;
                 if (this.modelService.CONSTS.game.level > 1) {
                     this.modelService.centerLabelText += '<b>Left: prev level<br></b>';
                 }
-                if (this.nextLevelAlreadyCleared) {
+                if (this.modelService.nextLevelAlreadyCleared) {
                     this.modelService.centerLabelText += `<b>
                     Right: next level<br></b>`;
                 }
-                this.canInteractAfterGameover = true;
+                this.modelService.canInteractAfterGameover = true;
             }, this.modelService.CONSTS.game.timeoutAfterGameover)
         }, this.modelService.CONSTS.game.timeoutAfterGameover);
+    }
+
+    public clearAllIntervals() {
+        _.each(this.modelService.allIntervals, i => { try { clearInterval(i); } catch (e) { } });
     }
 
 }

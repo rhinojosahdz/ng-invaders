@@ -41,7 +41,9 @@ export class BulletComponent {
         this.x = Math.floor(this.model.fromShip ? (this.model.x + (this.modelService.CONSTS.ship.width / 2)) : (this.model.x + (this.modelService.CONSTS.enemy.width / 2)));
         this.shootInterval = setInterval(() => {
             this.move();
-            this.checkForCollision();
+            try {
+                this.checkForCollision(); // sometimes we get an exception because we check for collision on an enemy that doesn't exist anymore because the ship shoot it
+            } catch (e) { };
         }, this.fromShip ? this.modelService.CONSTS.ship.bulletSpeed : (this.modelService.CONSTS.enemy.bulletSpeed * this.enemyThatShoot.type / this.modelService.CONSTS.enemy.bulletSpeedMultiplier))
         this.modelService.allIntervals.push(this.shootInterval);
         // console.log('shoot:', this.enemyThatShoot && this.enemyThatShoot.type);
@@ -92,8 +94,8 @@ export class BulletComponent {
                                 const enemyStartsY = e.component.y;
                                 const enemyEndsY = enemyStartsY + this.c.enemy.height;
                                 if (_.inRange(this.x, enemyStartsX, enemyEndsX) && _.inRange(y, enemyStartsY, enemyEndsY)) {
-                                    !this.super && this.destroy();
                                     e.component.destroy();
+                                    !this.super && this.destroy();
                                 }
                             });
                         }

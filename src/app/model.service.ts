@@ -10,31 +10,48 @@ import { ShieldComponent } from './shield.component';
 export class ModelService {
     public ship: ShipComponent;
     public board: BoardComponent;
-    public bullets: BulletComponent[] = [];
-    public enemies: EnemyComponent[] = [];
-    public shields: ShieldComponent[] = [];
-    private nextAppId: number = 1;
-    public gameover: boolean = false;
-    public pause: boolean = false;
-    public allIntervals: any[] = [];
     public CONSTS: any;
-    public enemiesAdded: number = 0;
-    public showCenterLabel: boolean = false;
+    public NODE_ENV: string;
     public centerLabelText: string;
-    public shipChargingSuperBullet: boolean = false;
     public shipStartedChargingSuperBullet: Date;
+    public bullets: BulletComponent[];
+    public enemies: EnemyComponent[];
+    public shields: ShieldComponent[];
+    private nextAppId: number;
+    public gameover: boolean;
+    public pause: boolean;
+    public allIntervals: any[];
+    public enemiesAdded: number;
+    public showCenterLabel: boolean;
+    public shipChargingSuperBullet: boolean;
+    public nextLevelAlreadyCleared: boolean;
+    public canInteractAfterGameover: boolean;
+    public pressingDownInterval: {
+        left: { running: boolean, interval: any },
+        right: { running: boolean, interval: any },
+    }
 
-    constructor() {
-        this.CONSTS = process.env.CONSTS;
-        let NODE_ENV = process.env.NODE_ENV;
-        switch (NODE_ENV) {
-            case 'production':
-                break;
-            case 'development':
-                break;
+    public startValues() {
+        this.bullets = [];
+        this.enemies = [];
+        this.shields = [];
+        this.nextAppId = 1;
+        this.gameover = false;
+        this.pause = false;
+        this.allIntervals = [];
+        this.enemiesAdded = 0;
+        this.showCenterLabel = false;
+        this.shipChargingSuperBullet = false;
+        this.nextLevelAlreadyCleared = false;
+        this.canInteractAfterGameover = false;
+        this.pressingDownInterval = {
+            left: { running: false, interval: <any>undefined },
+            right: { running: false, interval: <any>undefined },
         }
-        // alert(`Version ${this.CONSTS.game.version}`);
-        (<any>window).t = this;
+    }
+
+    public startGame() {
+        this.startValues();
         let level = this.CONSTS.game.level = +localStorage.getItem('level') || 1;
         let maxLevel = +localStorage.getItem('maxLevel') || 1;
         if (level > maxLevel) {
@@ -47,9 +64,9 @@ export class ModelService {
         this.CONSTS.game.enemiesInLevel = this.CONSTS.game.level1Enemies + this.CONSTS.game.extraLevelEnemies;
         this.CONSTS.enemy.enemiesThatShootEachInterval = level;
 
-        // ADVICE: if bullets make the app too slow uncomment this lines:
-        // this.CONSTS.enemy.bulletSpeedMultiplier = 2; // now enemies shoot twice as fast faster
-        // this.CONSTS.enemy.maxNumOfEnemiesThatShootEachInterval = Math.floor(this.CONSTS.enemy.maxNumOfEnemiesThatShootEachInterval / 2); // now there's only half the bullets than before
+        // ADVICE: if bullets make the app too slow uncomment this 2 lines:
+        this.CONSTS.enemy.bulletSpeedMultiplier = 1.5; // now enemies shoot twice as fast faster
+        this.CONSTS.enemy.maxNumOfEnemiesThatShootEachInterval = Math.floor(this.CONSTS.enemy.maxNumOfEnemiesThatShootEachInterval / 2); // now there's only half the bullets than before
 
         // all this conditions are so that the game doesn't become unplayable because the level
         if (this.CONSTS.enemy.moveInterval < this.CONSTS.enemy.minimumMoveInterval) {
@@ -67,6 +84,22 @@ export class ModelService {
         if (this.CONSTS.ship.bulletSpeed < this.CONSTS.ship.minBulletSpeed) {
             this.CONSTS.ship.bulletSpeed = this.CONSTS.ship.minBulletSpeed;
         }
+
+        setTimeout(() => {
+            this.board.startGame();
+        }, 100); // we wait a little bit for the board to be ready
+    }
+
+    constructor() {
+        this.CONSTS = process.env.CONSTS;
+        this.NODE_ENV = process.env.NODE_ENV;
+        switch (this.NODE_ENV) {
+            case 'production':
+                break;
+            case 'development':
+                break;
+        }
+        this.startGame();
     }
 
     public getNextAppId() {
