@@ -33,9 +33,9 @@ export class EnemyComponent implements OnInit {
         this.id = this.model.id;
         this.y = this.modelService.CONSTS.board.height - this.modelService.CONSTS.enemy.height;
         this.x = this.modelService.CONSTS.board.width - this.modelService.CONSTS.enemy.width;
-        this.modelService.allIntervals.push(this.modelService.allIntervals.push(this.moveInterval = setInterval(() => {
+        this.modelService.allIntervals.push(this.moveInterval = setInterval(() => {
             this.move();
-        }, this.modelService.CONSTS.enemy.moveInterval)));
+        }, this.modelService.CONSTS.enemy.moveInterval));
     }
 
     public move() {
