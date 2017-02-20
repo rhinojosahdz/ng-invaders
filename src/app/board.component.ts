@@ -199,7 +199,8 @@ export class BoardComponent {
     }
 
     public gameover() {
-        _.each(this.modelService.allIntervals, clearInterval);
+        // for some reason I get an exception when tring to clear some intervals
+        _.each(this.modelService.allIntervals, i => { try { clearInterval(i); } catch (e) { } });
         this.modelService.gameover = true;
         this.modelService.showCenterLabel = true;
         this.modelService.centerLabelText = '<b>GAMEOVER</b><br>';
@@ -210,7 +211,7 @@ export class BoardComponent {
                 this.modelService.centerLabelText += `<b>
                  Shoot: retry<br><b/>`;
                 if (this.modelService.CONSTS.game.level > 1) {
-                    this.modelService.centerLabelText+= '<b>Left: prev level<br></b>'
+                    this.modelService.centerLabelText += '<b>Left: prev level<br></b>';
                 }
                 if (this.nextLevelAlreadyCleared) {
                     this.modelService.centerLabelText += `<b>
