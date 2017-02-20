@@ -32,10 +32,11 @@ export class BulletComponent {
         this.fromShip = this.model.fromShip;
         this.y = this.model.fromShip ? (0 + this.modelService.CONSTS.ship.height) : (this.model.y - this.modelService.CONSTS.ship.height);
         this.x = Math.floor(this.model.fromShip ? (this.model.x + (this.modelService.CONSTS.ship.width / 2)) : (this.model.x + (this.modelService.CONSTS.enemy.width / 2)));
-        this.modelService.allIntervals.push(this.shootInterval = setInterval(() => {
+        this.shootInterval = setInterval(() => {
             this.move();
             this.checkForCollision();
-        }, this.fromShip ? this.modelService.CONSTS.ship.bulletSpeed : (this.modelService.CONSTS.enemy.bulletSpeed * this.enemyThatShoot.type)));
+        }, this.fromShip ? this.modelService.CONSTS.ship.bulletSpeed : (this.modelService.CONSTS.enemy.bulletSpeed * this.enemyThatShoot.type))
+        this.modelService.allIntervals.push(this.shootInterval);
         // console.log('shoot:', this.enemyThatShoot && this.enemyThatShoot.type);
     }
 
