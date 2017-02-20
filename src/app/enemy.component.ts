@@ -20,7 +20,6 @@ export class EnemyComponent implements OnInit {
     public movingDown: boolean = false;
     public movingDownCounter: number = 0;
     private moveDownSteps: number = 10;
-    public shootInterval: any;
     public moveInterval: any;
     public type = _.random(1, 4); // there can be 4 types, depending the type dependes how fast it's bullet goes
     constructor(
@@ -92,12 +91,10 @@ export class EnemyComponent implements OnInit {
     }
 
     public ngOnDestroy() {
-        clearInterval(this.shootInterval);
-        clearInterval(this.moveInterval);
-        // console.log('enemy gone');
-        if (this.modelService.enemies.length === 0 && this.modelService.CONSTS.game.enemiesInLevel <= this.modelService.enemiesAdded) {
+        try { clearInterval(this.moveInterval); } catch(e) {}; // gives a undefined.length error when trying to restart a game after enemies reached the shields
+        if (!this.modelService.gameover && this.modelService.enemies.length === 0 && this.modelService.CONSTS.game.enemiesInLevel <= this.modelService.enemiesAdded) {
             localStorage.setItem('level', ++this.modelService.CONSTS.game.level + '');
             this.modelService.board.restart();
         }
     }
-}
+} 
