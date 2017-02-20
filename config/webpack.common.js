@@ -7,7 +7,7 @@ var _ = require('lodash');
 var consts = require('./consts/consts.js');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 
-let ENV = 'consts';
+const NODE_ENV = process.env.NODE_ENV || 'development';
 module.exports = {
   entry: {
     'polyfills': './src/polyfills.ts',
@@ -52,8 +52,8 @@ module.exports = {
 
     new webpack.DefinePlugin({
       'process.env': {
-        'ENV': JSON.stringify(ENV),
-        'CONSTS': JSON.stringify(_.extend(consts, require('./consts/' + ENV)))
+        'NODE_ENV': JSON.stringify(NODE_ENV),
+        'CONSTS': JSON.stringify(_.extend(consts, require('./consts/' + NODE_ENV)))
       }
     }),
   ]

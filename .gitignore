@@ -1,3 +1,4 @@
 node_modules
-dist
+ng-invaders
 yarn.lock
+npm-debug.log

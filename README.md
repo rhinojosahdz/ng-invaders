@@ -16,4 +16,4 @@ Go to localhost:8080 to see the game.
 
 $> npm run build
 
-The build will be in the dist/ folder
+The build will be in the ng-invaders/ folder

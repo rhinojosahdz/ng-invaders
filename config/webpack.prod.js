@@ -4,13 +4,11 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonConfig = require('./webpack.common.js');
 var helpers = require('./helpers');
 
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-
 module.exports = webpackMerge(commonConfig, {
-  devtool: 'source-map',
+  // devtool: 'source-map', // commented so it doesn't add .map files
 
   output: {
-    path: helpers.root('dist'),
+    path: helpers.root('ng-invaders'),
     publicPath: '',
     filename: '[name].[hash].js',
     chunkFilename: '[id].[hash].chunk.js'
@@ -29,10 +27,5 @@ module.exports = webpackMerge(commonConfig, {
       }
     }),
     new ExtractTextPlugin('[name].[hash].css'),
-    new webpack.DefinePlugin({
-      'process.env': {
-        'ENV': JSON.stringify(ENV)
-      }
-    })
   ]
 });

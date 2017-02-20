@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "A webpack starter for Angular",
   "scripts": {
-    "start": "webpack-dev-server --inline --progress --port 8080",
+    "start": "NODE_ENV=development webpack-dev-server --inline --progress --port 8080",
     "test": "karma start",
-    "build": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail"
+    "build": "rimraf ng-invaders && NODE_ENV=production webpack --config config/webpack.prod.js --progress --profile --bail"
   },
   "license": "MIT",
   "dependencies": {
@@ -20,10 +20,10 @@
     "core-js": "^2.4.1",
     "lodash": "^4.17.4",
     "rxjs": "5.0.1",
-    "string-replace-webpack-plugin": "0.0.4",
     "zone.js": "^0.7.4"
   },
   "devDependencies": {
+    "string-replace-webpack-plugin": "0.0.4",
     "@types/jasmine": "2.5.38",
     "@types/lodash": "ts2.0",
     "@types/node": "^6.0.45",
