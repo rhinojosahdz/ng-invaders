@@ -208,8 +208,10 @@ export class BoardComponent {
             this.nextLevelAlreadyCleared = maxLevel > this.modelService.CONSTS.game.level;
             setTimeout(() => {
                 this.modelService.centerLabelText += `<b>
-                 Shoot: retry<br>
-                 Left: prev level<br></b>`;
+                 Shoot: retry<br><b/>`;
+                if (this.modelService.CONSTS.game.level > 1) {
+                    this.modelService.centerLabelText+= '<b>Left: prev level<br></b>'
+                }
                 if (this.nextLevelAlreadyCleared) {
                     this.modelService.centerLabelText += `<b>
                     Right: next level<br></b>`;
