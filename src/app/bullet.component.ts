@@ -20,6 +20,12 @@ export class BulletComponent {
     public fromShip: boolean;
     public enemyThatShoot: EnemyComponent;
     public shootInterval: any;
+    /**
+     * TODO @idea I can create a super bullet if I don't destroy it so that it can destroy multiple enemies.
+     * In order to shoot a super bullet you hold down space for some time.
+     * The downside is that it will completely destroy that shield's column
+     */
+    public super: boolean;
     constructor(
         public modelService: ModelService
     ) {
@@ -28,6 +34,7 @@ export class BulletComponent {
     public ngOnInit() {
         this.model.component = this;
         this.id = this.model.id;
+        this.super = this.model.super;
         this.enemyThatShoot = this.model.enemyThatShoot;
         this.fromShip = this.model.fromShip;
         this.y = this.model.fromShip ? 0 : (this.model.y - this.modelService.CONSTS.ship.height);
@@ -69,10 +76,9 @@ export class BulletComponent {
     public shieldsEndY = this.modelService.shields[0].component.y - 2; // -2 to avoid using >=
     public checkForCollision() {
         let ship = this.modelService.ship;
-        let b = this;
-        const y = b.y + this.c.bullet.height - 1; // -1 to avoid using >=
+        const y = this.y + this.c.bullet.height - 1; // -1 to avoid using >=
         if (this.fromShip) {
-            if (!this.checkIfShieldGotHit(b, b.y + this.c.bullet.height)) {
+            if (!this.checkIfShieldGotHit()) {
                 const fe = this.modelService.enemies[0]; // first enemy, it will always be the/or-one of the closest to the ship
                 if (fe) { // if there's at least an enemy
                     const enemiesStartY = fe.component.y; // - this.c.enemy.height;
@@ -85,8 +91,8 @@ export class BulletComponent {
                                 const enemyEndsX = enemyStartsX + this.c.enemy.width;
                                 const enemyStartsY = e.component.y;
                                 const enemyEndsY = enemyStartsY + this.c.enemy.height;
-                                if (_.inRange(b.x, enemyStartsX, enemyEndsX) && _.inRange(y, enemyStartsY, enemyEndsY)) {
-                                    b.destroy();
+                                if (_.inRange(this.x, enemyStartsX, enemyEndsX) && _.inRange(y, enemyStartsY, enemyEndsY)) {
+                                    !this.super && this.destroy();
                                     e.component.destroy();
                                 }
                             });
@@ -95,13 +101,13 @@ export class BulletComponent {
                 }
             }
         } else {
-            if (!this.checkIfShieldGotHit(b, b.y)) {
+            if (!this.checkIfShieldGotHit()) {
                 if (y < this.shieldsStartY) {
                     const shipStartsX = this.modelService.ship.x;
                     const shipEndsX = shipStartsX + this.c.ship.width;
-                    if (_.inRange(b.x, shipStartsX, shipEndsX)) {
+                    if (_.inRange(this.x, shipStartsX, shipEndsX)) {
                         this.modelService.ship.gotHit();
-                        b.destroy();
+                        this.destroy();
                         return true;
                     }
                 }
@@ -109,20 +115,21 @@ export class BulletComponent {
         }
     }
 
-    public checkIfShieldGotHit(b: BulletComponent, y: number): boolean {
+    public checkIfShieldGotHit(): boolean {
+        let y = this.fromShip ? this.y + this.c.bullet.height - 2 : this.y; // for some reason I need a -2, I think is because the bullet starts starts 2 positions higher when comming from the ship
         let shieldGotHit = false;
         if (y < this.shieldsStartY) { // _.inRange(y, shieldStarts, shipEnds) no need to use this because after `shipEnds` the board ends
             if (y > this.shieldsEndY) { // _.inRange(y, shieldStarts, shieldEnds)
                 _.each(this.modelService.shields, s => {
                     const shieldStartsX = s.x;
                     const shieldEndsX = s.x + this.c.shield.width;
-                    if (_.inRange(b.x, shieldStartsX, shieldEndsX)) {
-                        shieldGotHit = s.component.removePixel(Math.abs(b.x - s.component.x), b.fromShip);
+                    if (_.inRange(this.x, shieldStartsX, shieldEndsX)) {
+                        shieldGotHit = s.component.removePixel(Math.abs(this.x - s.component.x), this.fromShip);
                         return !shieldGotHit;
                     }
                 });
                 if (shieldGotHit) {
-                    b.destroy();
+                    !this.super && this.destroy();
                     return true;
                 }
             }

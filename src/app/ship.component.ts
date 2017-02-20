@@ -20,9 +20,9 @@ export class ShipComponent {
         this.x = Math.floor(this.modelService.CONSTS.board.width / 2 - (this.modelService.CONSTS.ship.width / 2)); // make sure we get a integer value, not decimal
     }
 
-    public shoot() {
+    public shoot(superBullet: boolean) {
         if (_.filter(this.modelService.bullets, { fromShip: true }).length < this.modelService.CONSTS.ship.maxNumOfBullets) {
-            this.modelService.bullets.push(<any>{ fromShip: true, id: this.modelService.getNextAppId(), x: this.modelService.ship.x });
+            this.modelService.bullets.push(<any>{ fromShip: true, id: this.modelService.getNextAppId(), x: this.modelService.ship.x, super: superBullet });
         }
     }
 

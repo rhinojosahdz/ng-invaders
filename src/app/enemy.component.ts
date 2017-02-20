@@ -22,7 +22,7 @@ export class EnemyComponent implements OnInit {
     private moveDownSteps: number = 10;
     public shootInterval: any;
     public moveInterval: any;
-    public type = _.random(1, 3); // there can be 3 types, depending the type dependes how fast it's bullet goes
+    public type = _.random(1, 4); // there can be 4 types, depending the type dependes how fast it's bullet goes
     constructor(
         public modelService: ModelService
     ) {
@@ -87,7 +87,7 @@ export class EnemyComponent implements OnInit {
     public shoot() {
         // @here enemy.css bottom doesn't work? | clearIntervals on destroy!
         let x = this.x, y = this.y;
-        this.modelService.bullets.push(<any>{ fromShip: false, id: this.modelService.getNextAppId(), x: this.x, y: this.y, enemyThatShoot: this });
+        this.modelService.bullets.push(<any>{ fromShip: false, id: this.modelService.getNextAppId(), x: this.x, y: this.y, enemyThatShoot: this, super: this.type === 4 });
     }
 
     public ngOnDestroy() {

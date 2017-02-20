@@ -188,6 +188,12 @@ export class BoardComponent {
             case ' ':
                 if (this.modelService.gameover && this.canInteractAfterGameover) {
                     this.retry();
+                } else {
+                    let timeChargingSuperBullet = new Date().getTime() - this.modelService.shipStartedChargingSuperBullet.getTime();
+                    console.log(timeChargingSuperBullet);
+                    const superBullet = timeChargingSuperBullet > this.modelService.CONSTS.ship.timeItTakesToShootSuperBullet;
+                    this.modelService.shipChargingSuperBullet = false;
+                    this.modelService.ship.shoot(superBullet);
                 }
                 break;
         }
@@ -239,7 +245,11 @@ export class BoardComponent {
                 }
                 break;
             case 'Space':
-                this.modelService.ship.shoot();
+                if (this.modelService.shipChargingSuperBullet) {
+                    return;
+                }
+                this.modelService.shipChargingSuperBullet = true;
+                this.modelService.shipStartedChargingSuperBullet = new Date();
                 break;
         }
     }

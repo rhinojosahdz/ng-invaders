@@ -20,6 +20,8 @@ export class ModelService {
     public enemiesAdded: number = 0;
     public showCenterLabel: boolean = false;
     public centerLabelText: string;
+    public shipChargingSuperBullet: boolean = false;
+    public shipStartedChargingSuperBullet: Date;
 
     constructor() {
         this.CONSTS = process.env.CONSTS;

@@ -24,6 +24,7 @@ let obj = {
         maxNumOfBullets: 1,
         bulletSpeed: 25,
         minBulletSpeed: 10,
+        timeItTakesToShootSuperBullet: 1000,
     },
     enemy: {
         width: 10 * m,
@@ -43,7 +44,7 @@ let obj = {
     },
     shield: {
         width: 7 * m,
-        height: 5 * m,
+        height: 8 * m,
         color: 'red',
         startingY: undefined, // int
     },
