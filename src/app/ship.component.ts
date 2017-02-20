@@ -26,6 +26,11 @@ export class ShipComponent {
         }
     }
 
+    public blink(): boolean {
+        let finishedChargingSuperBullet = this.modelService.shipStartedChargingSuperBullet && Math.abs(this.modelService.shipStartedChargingSuperBullet.getTime() - new Date().getTime()) > this.modelService.CONSTS.ship.timeItTakesToShootSuperBullet;
+        return this.modelService.shipChargingSuperBullet && !finishedChargingSuperBullet;
+    }
+
     public moveLeft() {
         this.x -= 1;
     }
