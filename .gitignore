@@ -2,3 +2,6 @@ node_modules/
 ng-invaders/
 yarn.lock
 npm-debug.log
+cordova/hooks/
+cordova/platforms/
+cordova/plugins/
