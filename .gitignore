@@ -5,3 +5,4 @@ npm-debug.log
 cordova/hooks/
 cordova/platforms/
 cordova/plugins/
+cordova/www
