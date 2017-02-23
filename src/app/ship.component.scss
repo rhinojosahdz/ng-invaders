@@ -7,8 +7,9 @@
     bottom: 0;
     background-image: url('assets/ship.png');
     &.destroyed {
-        // this doesn't work because the browser cache the image and it doesn't loop anymore after refreshing the page
-        // background-image: url('assets/small-explosion-loop-once-r.gif');
+        // to create a gif that only loops once: gifsicle original.gif --no-loopcount > new.gif
+        // to drastically reduce the size of a gif: gifsicle original.gif > new.gif
+        // background-image: url('assets/small-explosion-loop-once-r.gif'); // this doesn't work because the browser cache the image and it doesn't loop anymore after refreshing the page
     }
     &.blink {
         animation: blink-animation .2s steps(5, start) infinite;
