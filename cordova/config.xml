@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.rhinojosa.ng-invaders" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name></name>
+    <name>Ng Invaders</name>
     <description>
         Save earth of the invading aliens!!! Developed in Angular 2 and TypeScript.
     </description>
