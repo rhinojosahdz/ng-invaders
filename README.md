@@ -1,7 +1,7 @@
 # Ng Invaders
 A cool Space Invaders like game developed in Angular2.
 
-Demo: http://angularguy.net/ng-invaders
+Demo: http://rhinojosa.com/ng-invaders
 
 
 ## To start developing
